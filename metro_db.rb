@@ -21,6 +21,6 @@ class MetroDB
   end
 
   #TODO put db config here?
-# TODO replace MetroDB.new args with hash and add get method to Config class
+  #TODO replace MetroDB.new args with hash and add get method to Config class
 
 end
