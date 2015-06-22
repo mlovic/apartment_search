@@ -18,12 +18,18 @@ class IdealistaParser
         prop = Property.new(prop["latitude"], prop["longitude"], prop["price"], prop["address"])
         properties << prop
       end
+      $log.info "#{properties.size} properties parsed"
       return properties
     rescue Exception => e  
-      puts e.message  
-      puts e.backtrace.inspect  
-      #TODO use test_data, write exception type
-      puts "Error parsing response body:\n\n"
+      $log.error "obj: #{@obj.inspect}"
+      if @obj[:fault][:faultstring] == "Spike arrest violation. Allowed rate : 1ps"
+        puts "ERR: spike arrest violation"
+        #TODO use test_data, write exception type
+      else
+        puts e.message  
+        puts e.backtrace.inspect  
+      end
+      #puts "Error parsing response body:\n\n"
       #pp @obj
       exit
     end
