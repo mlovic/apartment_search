@@ -20,4 +20,7 @@ class MetroDB
     return bocas
   end
 
+  #TODO put db config here?
+# TODO replace MetroDB.new args with hash and add get method to Config class
+
 end
