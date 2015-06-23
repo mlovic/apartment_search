@@ -13,7 +13,7 @@ require 'metro_room/location'
 require 'metro_room/idealista'
 require 'metro_room/metro_db'
 require 'metro_room/configuration'
-require '../config'
+#require '../config'
 
 # TODO configuration file
 
