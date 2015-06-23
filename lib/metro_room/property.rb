@@ -1,5 +1,5 @@
 require 'haversine'
-require 'location'
+#require 'location'
 
 class Property
   attr_accessor :latitude, :longitude, :price, :address
