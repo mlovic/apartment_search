@@ -9,7 +9,9 @@ module MetroRoom
   end
 
   class Configuration
-    attr_accessor :db_host, :db_user, :db_password, :db_name, :api_key
+    attr_accessor :db_host, :db_user, :db_password, :db_name
+    attr_accessor :api_key
+    attr_accessor :logger_stdout, :logger_level
 
     def initialize
       puts 'initilizing config obj'
