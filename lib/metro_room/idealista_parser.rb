@@ -18,7 +18,7 @@ class IdealistaParser
         prop = Property.new(prop["latitude"], prop["longitude"], prop["price"], prop["address"], prop["url"])
         properties << prop
       end
-      $log.info "#{properties.size} properties parsed"
+      $log.info "#{properties.size} properties parsed: #{properties.first.address}."
       return properties
     rescue Exception => e  
       $log.error "obj: #{@obj.inspect}"

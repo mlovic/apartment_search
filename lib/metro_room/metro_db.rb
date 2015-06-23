@@ -13,10 +13,9 @@ class MetroDB
     rs.each_hash do |r|
       #TODO should be in bocas?
       loc = Location.new([r["Y"].to_f, r["X"].to_f])
-      boca = Boca.new(loc, estacion, r["salida"])
-      bocas << boca
-      $log.info "Retrieved #{bocas.size} bocas from the database"
+      bocas << Boca.new(loc, estacion, r["salida"])
     end
+    $log.info "Retrieved #{bocas.size} bocas from the database"
     return bocas
   end
 

@@ -20,5 +20,9 @@ class Location
   def coordinates
     [@lat, @long]
   end
+
+  def to_s
+    return "#{@lat},#{@long}"
+  end
 #                 self.to_arr
 end

@@ -12,7 +12,6 @@ MetroRoom.configure do |config|
 
 end
 
-
 MetroRoom.init #just put self.init outside of method?
 
 query = {"apikey"   => MetroRoom.configuration.api_key,
@@ -31,5 +30,6 @@ estacion = "Chueca"
 properties = MetroRoom.print_properties(query, estacion)
 
 $log.debug "MetroRoom mod used first time"
+#TODO change $log to not be global variable.
 
 #TODO handle several bocas

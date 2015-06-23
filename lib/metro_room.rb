@@ -21,16 +21,21 @@ require 'metro_room/configuration'
 
 module MetroRoom
   def self.get_properties(query, estacion)
-    json = Idealista.request(query)
-    properties = IdealistaParser.get_listings(json)
-
     metro_db = MetroDB.new(MetroRoom.configuration.db_host,
                            MetroRoom.configuration.db_user,
                            MetroRoom.configuration.db_password,
                            MetroRoom.configuration.db_name)
     # TODO replace MetroDB.new args with hash and add get method to Config class
     bocas = metro_db.get_bocas_from_estacion(estacion)
-    return bocas
+    # TODO finish this for multiple bocas
+    boca = bocas.first
+    $log.info "Boca: #{boca.estacion} - #{boca.salida}"
+
+    json = Idealista.request(query, boca.location)
+    properties = IdealistaParser.get_listings(json)
+
+    return properties
+    #TODO finish this, filter properties
   end
 
   def self.print_properties(query, estacion)
