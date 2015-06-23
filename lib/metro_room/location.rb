@@ -1,4 +1,5 @@
 class Location
+  attr_accessor :lat, :long
   def initialize(arg)
     if arg.is_a? String
       arr = arg.split(',')
