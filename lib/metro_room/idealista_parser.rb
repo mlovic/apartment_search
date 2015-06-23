@@ -15,7 +15,7 @@ class IdealistaParser
     properties = []
     begin
       @obj["elementList"].each do |prop|
-        prop = Property.new(prop["latitude"], prop["longitude"], prop["price"], prop["address"])
+        prop = Property.new(prop["latitude"], prop["longitude"], prop["price"], prop["address"], prop["url"])
         properties << prop
       end
       $log.info "#{properties.size} properties parsed"

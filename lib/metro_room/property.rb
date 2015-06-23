@@ -2,13 +2,14 @@ require 'haversine'
 #require 'location'
 
 class Property
-  attr_accessor :latitude, :longitude, :price, :address, :location
+  attr_accessor :latitude, :longitude, :price, :address, :location, :url
   #TODO choose either lat/long or location object to store that datta
-  def initialize(latitude = nil, longitude = nil, price = nil, address = nil)
+  def initialize(latitude = nil, longitude = nil, price = nil, address = nil, url = nil)
     @price = price
     @latitude = latitude
     @longitude = longitude
     @address = address
+    @url = url
     if latitude and longitude
       @location = Location.new([latitude, longitude])
     else
