@@ -1,0 +1,1 @@
+{"fault":{"faultstring":"Spike arrest violation. Allowed rate : 1ps","detail":{"errorcode":"policies.ratelimit.SpikeArrestViolation"}}}
