@@ -13,13 +13,16 @@ require 'metro_room/location'
 require 'metro_room/idealista'
 require 'metro_room/metro_db'
 require 'metro_room/configuration'
+require 'metro_room/spike_arrest_error'
 #require '../config'
 
 # TODO configuration file
 
-#$log.info "Starting..."
-
 module MetroRoom
+  def self.root
+    File.expand_path("..", File.dirname(__FILE__))
+  end
+
   def self.get_properties(query, estacion)
     metro_db = MetroDB.new(MetroRoom.configuration.db_host,
                            MetroRoom.configuration.db_user,
@@ -28,8 +31,9 @@ module MetroRoom
     # TODO replace MetroDB.new args with hash and add get method to Config class
     bocas = metro_db.get_bocas_from_estacion(estacion)
     # TODO finish this for multiple bocas
+    #$log.info "Bocas: #{boca.estacion} - #{boca.salida}"
+    $log.info "Bocas: #{bocas.inspect}"
     boca = bocas.first
-    $log.info "Boca: #{boca.estacion} - #{boca.salida}"
 
     json = Idealista.request(query, boca.location)
     properties = IdealistaParser.get_listings(json)

@@ -1,6 +1,8 @@
 require "net/http"
 require "uri"
 
+#TODO log time taken
+
 module Idealista
   def self.request(query, location)
     query.store("center", location.to_s)
