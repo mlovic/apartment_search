@@ -4,11 +4,11 @@ $:.unshift $parent_dir
 require 'lib/metro_room'
 
 module TestData
-  def self.idealista_response_body
+  def idealista_response_body
     File.read("#{MetroRoom.root}/spec/response_sample.json")
   end
 
-  def self.idealista_spike_arrest
+  def idealista_spike_arrest
     File.read("#{MetroRoom.root}/spec/spike_arrest_response_sample.json")
   end
 end

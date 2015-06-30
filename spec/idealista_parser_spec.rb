@@ -4,11 +4,15 @@ $:.unshift $parent_dir
 require 'lib/metro_room'
 require 'spec/test_data'
 
+RSpec.configure do |c|
+  c.include TestData
+end
+
 RSpec.describe IdealistaParser, ".getlistings" do
 
   context 'When request is successful' do
     before(:all) do
-      @json = TestData::idealista_response_body
+      @json = idealista_response_body
       MetroRoom.configure {}
       MetroRoom.init #take care of this, logging
     end
@@ -33,7 +37,7 @@ RSpec.describe IdealistaParser, ".check_spike_arrest" do
   end
   context 'request is successful' do
     it 'does nothing' do
-      @json = TestData::idealista_response_body
+      @json = idealista_response_body
       obj = JSON.parse(@json)
       expect(obj).not_to have_key("fault")
       expect { IdealistaParser.send(:check_spike_arrest, obj) }.not_to raise_exception
@@ -41,7 +45,7 @@ RSpec.describe IdealistaParser, ".check_spike_arrest" do
   end
   context 'when request is successful' do
     it 'raises SpikeArrestError' do
-      @json = TestData::idealista_spike_arrest
+      @json = idealista_spike_arrest
       obj = JSON.parse(@json)
       expect(obj).to have_key("fault")
       expect(obj["fault"]).to be_truthy
