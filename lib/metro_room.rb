@@ -19,12 +19,48 @@ require 'metro_room/spike_arrest_error'
 # TODO configuration file
 
 module MetroRoom
+  extend self # what is this exactly?
   def self.root
     File.expand_path("..", File.dirname(__FILE__))
   end
 
+  class << self
+    attr_accessor :metro_db
+    # Best practice?
+  end
+
+  def self.get_properties_from_line(query, line)
+    init_db
+    bocas = self.metro_db.get_bocas_from_line(line) # need self. ?
+    properties = []
+    bocas.each do |boca|
+      properties.push(*get_properties_from_boca(query, boca))
+    end
+    return properties
+  end
+  
+  def init_db
+    self.metro_db ||= MetroDB.new(MetroRoom.configuration.db_host,
+                           MetroRoom.configuration.db_user,
+                           MetroRoom.configuration.db_password,
+                           MetroRoom.configuration.db_name)
+  end
+
+  def get_properties_from_boca(query, boca)
+    failed_once ||= false
+    json = Idealista.request(query, boca.location)
+    return IdealistaParser.get_listings(json)
+  rescue SpikeArrestError
+    unless failed_once
+      failed_once = true
+      sleep 1.5
+      retry
+    end
+    raise
+  end
+    
   def self.get_properties(query, estacion)
-    metro_db = MetroDB.new(MetroRoom.configuration.db_host,
+    metro_db ||= MetroDB.new(MetroRoom.configuration.db_host,
                            MetroRoom.configuration.db_user,
                            MetroRoom.configuration.db_password,
                            MetroRoom.configuration.db_name)
