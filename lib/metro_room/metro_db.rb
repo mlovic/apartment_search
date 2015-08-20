@@ -14,6 +14,7 @@ class MetroDB
   def get_bocas_from_line(line)
     rs = @con.query("SELECT Y, X, estacion, salida FROM bocas_metro WHERE linea RLIKE \
                     '[[:<:]]#{line}[[:>:]]';")
+    # TODO remove LIMIT, fix
     #rs = @con.query("SELECT Y, X, salida FROM bocas_metro LIMIT 10;") 
     $log.info "Retrieved #{rs.num_rows} rows from the database"
     raise RuntimeError, "No bocas retrieved for line #{line}" unless rs.num_rows >  0

@@ -20,18 +20,18 @@ class IdealistaParser
     check_spike_arrest(@obj)
     raise StandardError, "ElementList not present?" unless @obj.has_key?("elementList")
     @obj["elementList"].each do |prop|
-      properties << Property.new(prop["latitude"], 
+      properties << Property.new(prop["latitude"],
                           prop["longitude"], 
                           prop["price"], 
                           prop["address"], 
                           prop["url"])
     end
-    $log.info "#{properties.size} properties parsed: #{properties.first.address}."
+    $log.info "#{properties.size} properties parsed: #{properties.first.address rescue "No properties"}."
     $log.info "Total properties: #{total_properties}."
     return properties
-  rescue StandardError => e  
+  #rescue StandardError => e  
     #raise e if e.is_a?(SpikeArrestError)
-    raise
+    #raise
     #puts e.message  
     ##puts e.backtrace.inspect  
     #puts @obj.class.name
@@ -55,7 +55,7 @@ class IdealistaParser
 
     def self.check_spike_arrest(obj)
       if obj["fault"] and (obj["fault"]["faultstring"] == "Spike arrest violation. Allowed rate : 1ps") # Remove brackets?
-       $log.warn "Going to raise spike arrest!"
+        $log.warn "Going to raise spike arrest!"
         raise SpikeArrestError, "Spike arrest violation"
       end
     rescue NoMethodError

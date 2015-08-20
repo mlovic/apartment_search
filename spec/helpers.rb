@@ -21,4 +21,8 @@ module Helpers
                            MetroRoom.configuration.db_name)
   end
 
+  def mock_logging
+    #TODO
+  end
+
 end

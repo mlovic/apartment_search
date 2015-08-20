@@ -1,4 +1,4 @@
-#$:.unshift File.dirname(__FILE__)
+
 #$:.unshift File.expand_path(File.dirname(__FILE__)
 $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
 require 'logger'
@@ -35,6 +35,7 @@ module MetroRoom
     properties = []
     bocas.each do |boca|
       properties.push(*get_properties_from_boca(query, boca))
+      $log.debug "Boca #{boca.estacion}, #{boca.salida} finished"
     end
     return properties
   end
@@ -49,12 +50,16 @@ module MetroRoom
   def get_properties_from_boca(query, boca)
     failed_once ||= false
     json = Idealista.request(query, boca.location)
-    return IdealistaParser.get_listings(json)
+    properties = IdealistaParser.get_listings(json)
+    return properties
   rescue SpikeArrestError
     unless failed_once
       failed_once = true
-      sleep 1.5
+      $log.info "Waiting to retry idealista request..."
+      sleep 3
       retry
+    else
+      $log.warn "Spike arrest error raised again"
     end
     raise
   end

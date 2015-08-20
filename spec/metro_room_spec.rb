@@ -27,6 +27,8 @@ RSpec.describe MetroRoom, ".get_properties_from_line" do
     allow(MetroRoom.metro_db).to receive(:get_bocas_from_line).with(12) { @bocas }
     allow(MetroRoom).to receive(:get_properties_from_boca) { @properties }
 
+    default_configure
+    MetroRoom.init #TODO stub logging? in helpers module?
     properties = MetroRoom.get_properties_from_line({"query" => "test"}, 12)
 
     puts properties.first.class.name

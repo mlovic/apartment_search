@@ -10,11 +10,14 @@ end
 
 RSpec.describe IdealistaParser, ".getlistings" do
 
+  before(:all) do
+    @json = idealista_response_body
+    MetroRoom.configure {}
+    MetroRoom.init #take care of this, logging
+  end
   context 'When request is successful' do
     before(:all) do
       @json = idealista_response_body
-      MetroRoom.configure {}
-      MetroRoom.init #take care of this, logging
     end
     it 'returns properties' do
       expect(@json.is_a? String).to be true 
@@ -27,6 +30,15 @@ RSpec.describe IdealistaParser, ".getlistings" do
       expect(properties.first).to be_a Property
       expect(properties.size).to eq 2
     end
+  context 'When zero properties found' do
+    before(:all) { @json = idealista_response_no_properties }
+    it 'returns empty array' do
+      properties = IdealistaParser.get_listings(@json)
+      expect(properties).to eq []
+      #warning?
+    end
+
+  end
   end
 end
 
