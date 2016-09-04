@@ -45,15 +45,12 @@ RSpec.describe MetroRoom, "#get_properties_from_boca" do
   end
   context 'no spike arrest' do
     it 't' do
-      allow(Idealista).to receive(:request) { idealista_response_body }
-      allow(IdealistaParser).to receive(:get_listings) { @properties }
 
       properties = MetroRoom.get_properties_from_boca({"query" => "test"}, @boca)
-      expect(MetroRoom).not_to receive(:sleep)
       expect { MetroRoom.get_properties_from_boca({"query" => "test"}, @boca) }.not_to raise_error(SpikeArrestError)
       expect(properties).to be_an Array
-      expect(properties.first.is_a? Property).to be true
-      expect(properties.all? { |p| p.is_a? Property }).to be true
+      expect(properties.first.is_a? Idealista::Property).to be true
+      expect(properties.all? { |p| p.is_a? Idealista::Property }).to be true
     end
   end
   context 'after spike arrest' do

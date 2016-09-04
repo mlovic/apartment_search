@@ -5,15 +5,16 @@ require 'logger'
 require 'pp'
 require 'matrix'
 require 'haversine'
+require 'idealista'
 
 require 'metro_room/init'
-require 'metro_room/property'
-require 'metro_room/idealista_parser'
+require 'metro_room/idealista/property'
+require 'metro_room/idealista/idealista_parser'
 require 'metro_room/location'
-require 'metro_room/idealista'
+require 'metro_room/idealista/idealista'
 require 'metro_room/metro_db'
 require 'metro_room/configuration'
-require 'metro_room/spike_arrest_error'
+require 'metro_room/idealista/spike_arrest_error'
 #require '../config'
 
 # TODO configuration file
@@ -51,6 +52,7 @@ module MetroRoom
     failed_once ||= false
     json = Idealista.request(query, boca.location)
     properties = IdealistaParser.get_listings(json)
+
     return properties
   rescue SpikeArrestError
     unless failed_once

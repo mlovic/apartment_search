@@ -1,4 +1,4 @@
-require 'location'
+require_relative 'location'
 
 class Boca
   attr_accessor :location, :estacion, :salida

@@ -5,6 +5,9 @@ require 'json'
 require 'lib/metro_room'
 require 'pry'
 require 'pry-byebug'
+require 'tilt/erubis'
+require 'pp'
+
 
 #set :dump_errors, false
 
@@ -20,28 +23,36 @@ MetroRoom.configure do |config|
   config.logger_level  = 'DEBUG'
 end
 
-MetroRoom.init #just put self.init outside of method?
+MetroRoom.init
 
-query = {"apikey"   => MetroRoom.configuration.api_key,
-         "country" => "es",
-         "maxItems" => 9999,
-         "numPage" => 1,
-         "distance" => 100,
-         #"center" => "40.4229014,-3.6976351",
-         "propertyType" => "bedrooms",
-         "operation" => "A",
-         "order" => "distance",
-         "sort" => "asc",
-         "maxPrice" => "300",
-        }
+  $metro_db = MetroDB.new(MetroRoom.configuration.db_host,
+                          MetroRoom.configuration.db_user,
+                          MetroRoom.configuration.db_password,
+                          MetroRoom.configuration.db_name)
+  p $metro_db
+
+  $client = Idealista::Client.new("EzWE6qNgjSFTEs4plajIvMzmrm5DOset")
+
+    $query = {:country => "es",
+             :max_items => 50,
+             :num_page => 1,
+             :distance => 800,
+             :center => "40.4229014,-3.6976351",
+             :property_type => "bedrooms",
+             :operation => "A",
+             :order => "distance",
+             :sort => "asc",
+             :max_price => 800,
+             }
+
 estacion = "Tribunal"
 
 def convert_to_json(properties)
   prop_arr = []
   properties.each do |p|
     prop_arr << { address: p.address, 
-                  latitude: p.location.lat, 
-                  longitude: p.location.long,
+                  latitude: p.latitude, 
+                  longitude: p.longitude,
                   url: p.url }
   end
   json = JSON.generate(prop_arr)
@@ -50,8 +61,13 @@ end
 
 get '/line/:line/:max_items'do
   begin
-    query["maxItems"] = params['max_items']
-    properties = MetroRoom.get_properties_from_line(query, params['line'])
+    bocas = $metro_db.get_bocas_from_line(params['line'])
+    properties = bocas.flat_map do |boca|
+      $query[:center] = boca.location.to_s
+      ppp = $client.search($query)
+      puts 'searching...'
+      pp ppp
+    end
     logger.info "#{properties.size} properties received..."
     $json = convert_to_json(properties)
     erb :index
@@ -62,14 +78,13 @@ end
 
 get '/:station/:max_items' do
   begin
-    query["maxItems"] = params['max_items']
-    properties = MetroRoom.get_properties(query, params['station'])
+    boca = $metro_db.get_bocas_from_estacion(params['station']).first
+    $query[:center] = boca.location.to_s
+    properties = $client.search($query)
     logger.info "#{properties.size} properties received..."
     $json = convert_to_json(properties)
     erb :index
   rescue SpikeArrestError => e
-    #e.message
-    #e.backtrace
     erb :spike_arrest
   end
 end

@@ -1,10 +1,13 @@
+$:.unshift File.dirname(__FILE__)
+
 require 'mysql'
 
-require 'boca'
+require_relative 'boca'
 
 class MetroDB
   def initialize(host, user, pass, db)
     @con = Mysql.new(host, user, pass, db)
+    puts 'this created'
   end
 
   def query(arg)
@@ -17,6 +20,7 @@ class MetroDB
     # TODO remove LIMIT, fix
     #rs = @con.query("SELECT Y, X, salida FROM bocas_metro LIMIT 10;") 
     $log.info "Retrieved #{rs.num_rows} rows from the database"
+    puts "Retrieved #{rs.num_rows} rows from the database"
     raise RuntimeError, "No bocas retrieved for line #{line}" unless rs.num_rows >  0
     bocas = convert_to_bocas(rs)
     $log.info "Retrievedd #{bocas.size} bocas from the database"
